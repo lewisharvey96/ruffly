@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "ruffly"
+version = "0.0.1"
+authors = [
+    "Lewis Harvey"
+]
+description= "Cli tool to add common config to pyroject.toml"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+packages = [
+    { include = "src" }
+]
+
+[tool.poetry.scripts]
+ruffly = "src.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+toml = "^0.10.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
