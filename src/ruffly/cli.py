@@ -2,7 +2,7 @@ import os
 import toml
 import argparse
 
-from src.utils import CONFIG_DICT
+from ruffly.utils import CONFIG_DICT
 
 
 def find_file(directory):
@@ -30,12 +30,10 @@ def main():
 
     # Locate/initialize the pyproject.toml file
     file_path = find_file(args.path)
-    # if file_path:
-    #     add_config(file_path)
-    #     print(f'Successfully modified {file_path}')
-    # else:
-    #     print(f"No pyproject.toml file found in {args.path} -- please run 'poetry init' first")
+    if file_path:
+        add_config(file_path)
+        print(f'Successfully modified {file_path}')
+    else:
+        print(f"No pyproject.toml file found in {args.path} -- please run 'poetry init' first")
 
 
-if __name__ == '__main__':
-    main()

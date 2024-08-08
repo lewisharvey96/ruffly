@@ -1,21 +1,5 @@
 CONFIG_DICT = {
     "tool": {
-        "poetry": {
-            "group": {
-                "dev": {
-                    "dependencies": {
-                        "ruff": ">=0.0.286",
-                        "mypy": ">=0.991",
-                        "poethepoet": ">=0.18.1",
-                        "pytest": ">=7.2.1",
-                        "coverage": ">=7.3.2",
-                        "pytest-random-order": ">=1.1.0",
-                        "python-dotenv": ">=1.0.1",
-                        "tenvplate": ">=0.0.2"
-                    }
-                }
-            }
-        },
         "ruff": {
             "line-length": 120,
             "target-version": "py311",
