@@ -7,29 +7,27 @@ CONFIG_DICT = {
             "exclude": [".venv", "__ignore__", "notebooks", "scripts"],
             "lint": {
                 "select": ["A", "E", "F", "UP", "I", "W", "SIM", "RUF", "C901"],
-                "ignore": ["A002", "A003", "RUF012"]
-            }
+                "ignore": ["A002", "A003", "RUF012"],
+            },
         },
         "mypy": {
             "plugins": ["pydantic.mypy"],
             "python_version": "3.11",
             "ignore_missing_imports": True,
             "disallow_untyped_defs": True,
-            "exclude": "tests|notebooks|__ignore__|.ipynb_checkpoints|scripts"
+            "exclude": "tests|notebooks|__ignore__|.ipynb_checkpoints|scripts",
         },
         "pytest": {
             "ini_options": {
                 "addopts": "--random-order-seed=424242",
-                "filterwarnings": ["error", "ignore:Passing unrecognized arguments:DeprecationWarning"]
+                "filterwarnings": ["error", "ignore:Passing unrecognized arguments:DeprecationWarning"],
             }
         },
         "coverage": {
-            "run": {
-                "include": ["src/*"]
-            },
+            "run": {"include": ["src/*"]},
             "report": {
                 "exclude_also": ["raise AssertionError", "raise NotImplementedError", "@(abc\\.)?abstractmethod"]
-            }
+            },
         },
         "poe": {
             "tasks": {
@@ -38,25 +36,21 @@ CONFIG_DICT = {
                     "sequence": [
                         {"cmd": "poetry run ruff format ."},
                         {"cmd": "poetry run ruff check . --fix"},
-                        {"cmd": "poetry run python -m mypy ."}
-                    ]
+                        {"cmd": "poetry run python -m mypy ."},
+                    ],
                 },
                 "tests": {
                     "help": "Runs all tests",
                     "sequence": [
                         {"cmd": "poetry run coverage run -m pytest ./tests"},
-                        {"cmd": "poetry run coverage report -m"}
-                    ]
+                        {"cmd": "poetry run coverage report -m"},
+                    ],
                 },
                 "all": {
                     "help": "Run all required pre-push commands",
-                    "sequence": [
-                        {"ref": "lint"},
-                        {"ref": "tests"},
-                        {"shell": "echo \"\nAll Good! :)\""}
-                    ]
-                }
+                    "sequence": [{"ref": "lint"}, {"ref": "tests"}, {"shell": 'echo "\nAll Good! :)"'}],
+                },
             }
-        }
+        },
     }
 }
