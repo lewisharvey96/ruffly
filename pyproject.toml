@@ -18,7 +18,7 @@ classifiers = [
 dependencies=["toml"]
 
 [project.optional-dependencies]
-dev = ["pytest", "types-toml", "pytest-random-order", "coverage", "mypy", "ruff", "poethepoet"]
+dev = ["pytest","pytest-mock", "types-toml", "pytest-random-order", "coverage", "mypy", "ruff", "poethepoet"]
 
 [project.scripts]
 ruffly = "src.cli:run"

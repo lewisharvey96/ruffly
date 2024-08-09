@@ -67,6 +67,38 @@ def test_get_tools():
 
 
 class TestCliRun:
+    def test_cli_run_with_defaults(self, tmp_path, mocker):
+        sample_dst_path = tmp_path / "pyproject.toml"
+        shutil.copyfile(TEST_DIR / "empty.toml", sample_dst_path)
+        src_path = TEST_DIR.parent / "src" / "ruffly" / "default.toml"
+        mocker.patch("os.getcwd").return_value = sample_dst_path.parent.as_posix()
+
+        test_args = ("ruffly").split(" ")
+        with patch.object(sys, "argv", test_args):
+            run()
+
+        with open(sample_dst_path) as f:
+            actual = toml.load(f)
+
+        with open(src_path) as f:
+            expected = toml.load(f)
+
+        assert actual["tool"] == expected["tool"]
+
+    def test_cli_dry_run_with_defaults(self, tmp_path, mocker):
+        sample_dst_path = tmp_path / "pyproject.toml"
+        shutil.copyfile(TEST_DIR / "empty.toml", sample_dst_path)
+        mocker.patch("os.getcwd").return_value = sample_dst_path.parent.as_posix()
+
+        test_args = ("ruffly --dry-run").split(" ")
+        with patch.object(sys, "argv", test_args):
+            run()
+
+        with open(sample_dst_path) as f:
+            actual = toml.load(f)
+
+        assert actual == {}
+
     def test_cli_run_for_ruff(self, tmp_path):
         sample_dst_path = tmp_path / "pyproject.toml"
         shutil.copyfile(TEST_DIR / "empty.toml", sample_dst_path)
@@ -74,8 +106,7 @@ class TestCliRun:
         tools = ["ruff"]
 
         test_args = (
-            f"ruffly init --src-path {src_path.as_posix()} --dst-dir {sample_dst_path.parent.as_posix()} "
-            f"--tools ruff"
+            f"ruffly --src-path {src_path.as_posix()} --dst-dir {sample_dst_path.parent.as_posix()} " f"--tools ruff"
         ).split(" ")
         with patch.object(sys, "argv", test_args):
             run()
@@ -96,11 +127,7 @@ class TestCliRun:
 
         src_path = TEST_DIR / "testdefault.toml"
 
-        test_args = (
-            f"ruffly init --src-path {src_path} --dst-dir {sample_dst_path.parent.as_posix()} --auto".split(
-                " "
-            )
-        )
+        test_args = f"ruffly --src-path {src_path} --dst-dir {sample_dst_path.parent.as_posix()} --auto".split(" ")
         with patch.object(sys, "argv", test_args):
             run()
 
@@ -112,18 +139,19 @@ class TestCliRun:
 
         assert actual["tool"] == expected
 
-    def test_cli_run_using_url_src(self, tmp_path):
+    def test_cli_run_using_url_src(self, tmp_path, mocker):
         sample_dst_path = tmp_path / "pyproject.toml"
         shutil.copyfile(TEST_DIR / "empty.toml", sample_dst_path)
         with open(sample_dst_path, "w") as f:
-            toml.dump({"tool": {"mypy": {}}}, f)
+            toml.dump({"tool": {"ruff": {}}}, f)
 
-        src_path = "https://github.com/lewisharvey96/ruffly/blob/main/tests/testdefault.toml"
+        resp_b = b"[tool.ruff]\nline-length = 120\nshow-fixes = true\n\n[tool.mypy]\nignore_missing_imports = true\n"
+
+        mocker.patch("urllib.request.urlopen").return_value.read.return_value = resp_b
+        src_path = "https://someurl.com/pyproject.toml"
 
         test_args = (
-            f"ruffly init --src-path {src_path.as_posix()} --dst-dir {sample_dst_path.parent.as_posix()} --auto".split(
-                " "
-            )
+            f"ruffly --src-path {src_path} --dst-dir {sample_dst_path.parent.as_posix()} --tools ruff,mypy".split(" ")
         )
         with patch.object(sys, "argv", test_args):
             run()
@@ -131,7 +159,4 @@ class TestCliRun:
         with open(sample_dst_path) as f:
             actual = toml.load(f)
 
-        with open(src_path) as f:
-            expected = {k: v for k, v in toml.load(f)["tool"].items() if k in ["mypy"]}
-
-        assert actual["tool"] == expected
+        assert actual["tool"] == toml.loads(resp_b.decode())["tool"]

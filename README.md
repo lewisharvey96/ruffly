@@ -2,15 +2,21 @@
 
 ### Usage
 
-Cli tool to add common config to pyroject.toml
+Cli tool to add common config to pyroject.toml.
 
+Basic usage:
 ```commandline
-cd /path/to/poetryproject ruffly init
+cd/project/with/pyrojecttoml ruffly
 ```
-or 
-```commandline
-ruffly init --path /path/to/poetryproject
-```
+will add default config to pyproject.toml found in working directory.
+
+Additional arguments:
+
+- ```--dst-dir``` The directory of the target pytroject.toml to modify
+- ```--src-dir``` The directory of the source pytroject.toml to copy from (can be url)
+- ```--auto``` Only copies config for tools that exist int the target pyproject.toml
+- ```--tools``` A list of tools to copy config for
+- ```--dry-run``` Only prints the changes that would be made
 
 ### Installation
 
