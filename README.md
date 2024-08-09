@@ -18,6 +18,13 @@ Additional arguments:
 - ```--tools``` A list of tools to copy config for
 - ```--dry-run``` Only prints the changes that would be made
 
+Current tools supported:
+- ruff
+- mypy
+- pytest
+- coverage
+- poe (poethepoet)
+
 ### Installation
 
 ```commandline
