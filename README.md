@@ -12,9 +12,9 @@ will add default config to pyproject.toml found in working directory.
 
 Additional arguments:
 
-- ```--dst-dir``` The directory of the target pytroject.toml to modify
-- ```--src-dir``` The directory of the source pytroject.toml to copy from (can be url)
-- ```--auto``` Only copies config for tools that exist int the target pyproject.toml
+- ```--dst``` The path to the target pytroject.toml to modify
+- ```--src``` The path to the source pytroject.toml to copy from (can be url)
+- ```--only-existing``` Only copies config for tools that exist int the target pyproject.toml
 - ```--tools``` A list of tools to copy config for
 - ```--dry-run``` Only prints the changes that would be made
 

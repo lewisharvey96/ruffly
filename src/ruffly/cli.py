@@ -46,24 +46,24 @@ def _add_config(src_path: str, dst_path: str, tools: list[str] | None = None, dr
 def run() -> None:
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="Ruffly add settings to pyproject.toml")
-    parser.add_argument("--dst-dir", help="Path to directory of target pyproject.toml", default=os.getcwd())
-    parser.add_argument("--src-path", help="Path to template pyproject.toml")
+    parser.add_argument("--dst", help="Path to target pyproject.toml")
+    parser.add_argument("--src", help="Path to template pyproject.toml")
     parser.add_argument(
-        "--auto",
+        "--only-existing",
         help="Add settings for tools in current pyproject.toml",
         action=argparse.BooleanOptionalAction,
         default=False,
     )
-    parser.add_argument("--tools", help="Add settings for comma seperated list of tools", nargs="?", type=str)
+    parser.add_argument("--tools", help="Add settings for comma separated list of tools", nargs="?", type=str)
     parser.add_argument(
         "--dry-run", help="Print changes without modifying file", action=argparse.BooleanOptionalAction, default=False
     )
     args = parser.parse_args()
 
     # Locate/initialize the pyproject.toml file
-    file_path = _find_file(args.dst_dir)
+    file_path = args.dst if args.dst else _find_file(os.getcwd())
     if file_path:
-        tools = args.tools.split(",") if args.tools else _get_tools(file_path) if args.auto else None
-        _add_config(args.src_path or DEFAULT_TOML_FP.as_posix(), file_path, tools, args.dry_run)
+        tools = args.tools.split(",") if args.tools else _get_tools(file_path) if args.only_existing else None
+        _add_config(args.src or DEFAULT_TOML_FP.as_posix(), file_path, tools, args.dry_run)
     else:
         print(f"No pyproject.toml file found in {args.path}!")
